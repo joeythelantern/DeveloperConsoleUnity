@@ -982,10 +982,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1316145854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eee8b2ebd63f952478930c558c0fa374, type: 3}
+  m_Script: {fileID: 11500000, guid: 973321c930718b54286253680f655870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consoleCavas: {fileID: 1271366642}
+  consoleCanvas: {fileID: 1271366642}
   scrollRect: {fileID: 1419195555}
   consoleText: {fileID: 749757145}
   inputText: {fileID: 2048249325}

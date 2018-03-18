@@ -25,11 +25,11 @@ namespace Console
 
     public class DeveloperConsole : MonoBehaviour
     {
-        public static DeveloperConsole Instace { get; private set; }
+        public static DeveloperConsole Instance { get; private set; }
         public static Dictionary<string, ConsoleCommand> Commands { get; private set; }
 
         [Header("UI Components")]
-        public Canvas consoleCavas;
+        public Canvas consoleCanvas;
         public ScrollRect scrollRect;
         public Text consoleText;
         public Text inputText;
@@ -37,30 +37,29 @@ namespace Console
 
         private void Awake()
         {
-            if (Instace != null)
+            if(Instance != null)
             {
                 return;
             }
 
-            Instace = this;
+            Instance = this;
             Commands = new Dictionary<string, ConsoleCommand>();
         }
 
         private void Start()
         {
-            consoleCavas.gameObject.SetActive(false);
-
-            CreatCommands();
+            consoleCanvas.gameObject.SetActive(false);
+            CreateCommands();
         }
 
-        private void CreatCommands()
+        private void CreateCommands()
         {
             CommandQuit commandQuit = CommandQuit.CreateCommand();
         }
 
         public static void AddCommandsToConsole(string _name, ConsoleCommand _command)
         {
-            if (!Commands.ContainsKey(_name))
+            if(!Commands.ContainsKey(_name))
             {
                 Commands.Add(_name, _command);
             }
@@ -68,16 +67,16 @@ namespace Console
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.BackQuote))
+            if(Input.GetKeyDown(KeyCode.BackQuote))
             {
-                consoleCavas.gameObject.SetActive(!consoleCavas.gameObject.activeInHierarchy);
+                consoleCanvas.gameObject.SetActive(!consoleCanvas.gameObject.activeInHierarchy);
             }
 
-            if (consoleCavas.gameObject.activeInHierarchy)
+            if(consoleCanvas.gameObject.activeInHierarchy)
             {
-                if (Input.GetKeyDown(KeyCode.Return))
+                if(Input.GetKeyDown(KeyCode.Return))
                 {
-                    if (inputText.text != "")
+                    if(inputText.text != "")
                     {
                         AddMessageToConsole(inputText.text);
                         ParseInput(inputText.text);
@@ -86,7 +85,7 @@ namespace Console
             }
         }
 
-        public void AddMessageToConsole(string msg)
+        private void AddMessageToConsole(string msg)
         {
             consoleText.text += msg + "\n";
             scrollRect.verticalNormalizedPosition = 0f;
@@ -94,21 +93,21 @@ namespace Console
 
         public static void AddStaticMessageToConsole(string msg)
         {
-            DeveloperConsole.Instace.consoleText.text += msg + "\n";
-            DeveloperConsole.Instace.scrollRect.verticalNormalizedPosition = 0f;
+            DeveloperConsole.Instance.consoleText.text += msg + "\n";
+            DeveloperConsole.Instance.scrollRect.verticalNormalizedPosition = 0f;
         }
 
         private void ParseInput(string input)
         {
             string[] _input = input.Split(null);
 
-            if(_input.Length == 0 || _input == null)
+            if (_input.Length == 0 || _input == null)
             {
                 AddMessageToConsole("Command not recognized.");
                 return;
             }
 
-            if(!Commands.ContainsKey(_input[0]))
+            if (!Commands.ContainsKey(_input[0]))
             {
                 AddMessageToConsole("Command not recognized.");
             }

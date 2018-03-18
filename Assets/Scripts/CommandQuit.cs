@@ -1,7 +1,5 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Console
@@ -13,21 +11,23 @@ namespace Console
         public override string Description { get; protected set; }
         public override string Help { get; protected set; }
 
-        public CommandQuit() : base()
+        public CommandQuit()
         {
             Name = "Quit";
             Command = "quit";
-            Description = "Quits the application.";
-            Help = "Use this command with no arguments to force the Unity application to close";
+            Description = "Quits the application";
+            Help = "Use this command with no arguments to force Unity to quit!";
 
             AddCommandToConsole();
         }
 
         public override void RunCommand()
         {
-            if(Application.isEditor)
+            if (Application.isEditor)
             {
+#if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
+#endif
             }
             else
             {
