@@ -17,7 +17,7 @@ namespace Console
             string addMessage = " command has been added to the console.";
 
             DeveloperConsole.AddCommandsToConsole(Command, this);
-            DeveloperConsole.AddStaticMessageToConsole(Name + addMessage);
+            Debug.Log(Name + addMessage);
         }
 
         public abstract void RunCommand();
@@ -30,7 +30,6 @@ namespace Console
 
         [Header("UI Components")]
         public Canvas consoleCanvas;
-        public ScrollRect scrollRect;
         public Text consoleText;
         public Text inputText;
         public InputField consoleInput;
@@ -52,9 +51,25 @@ namespace Console
             CreateCommands();
         }
 
+        private void OnEnable()
+        {
+            Application.logMessageReceived += HandleLog;
+        }
+
+        private void OnDisable()
+        {
+            Application.logMessageReceived -= HandleLog;
+        }
+
+        private void HandleLog(string logMessage, string stackTrace, LogType type)
+        {
+            string _message = "[" + type.ToString() + "] " + logMessage;
+            AddMessageToConsole(_message);
+        }
+
         private void CreateCommands()
         {
-            CommandQuit commandQuit = CommandQuit.CreateCommand();
+            CommandQuit.CreateCommand();
         }
 
         public static void AddCommandsToConsole(string _name, ConsoleCommand _command)
@@ -88,13 +103,6 @@ namespace Console
         private void AddMessageToConsole(string msg)
         {
             consoleText.text += msg + "\n";
-            scrollRect.verticalNormalizedPosition = 0f;
-        }
-
-        public static void AddStaticMessageToConsole(string msg)
-        {
-            DeveloperConsole.Instance.consoleText.text += msg + "\n";
-            DeveloperConsole.Instance.scrollRect.verticalNormalizedPosition = 0f;
         }
 
         private void ParseInput(string input)
@@ -103,13 +111,13 @@ namespace Console
 
             if (_input.Length == 0 || _input == null)
             {
-                AddMessageToConsole("Command not recognized.");
+                Debug.LogWarning("Command not recognized.");
                 return;
             }
 
             if (!Commands.ContainsKey(_input[0]))
             {
-                AddMessageToConsole("Command not recognized.");
+                Debug.LogWarning("Command not recognized.");
             }
             else
             {
