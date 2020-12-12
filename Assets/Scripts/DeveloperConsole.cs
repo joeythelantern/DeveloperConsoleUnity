@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,7 @@ namespace Console
             Debug.Log(Name + addMessage);
         }
 
-        public abstract void RunCommand();
+        public abstract void RunCommand(string[] args);
     }
 
     public class DeveloperConsole : MonoBehaviour
@@ -70,6 +71,7 @@ namespace Console
         private void CreateCommands()
         {
             CommandQuit.CreateCommand();
+            CommandCube.CreateCommand();
         }
 
         public static void AddCommandsToConsole(string _name, ConsoleCommand _command)
@@ -107,7 +109,7 @@ namespace Console
 
         private void ParseInput(string input)
         {
-            string[] _input = input.Split(null);
+            string[] _input = input.Split(' ');
 
             if (_input.Length == 0 || _input == null)
             {
@@ -121,7 +123,14 @@ namespace Console
             }
             else
             {
-                Commands[_input[0]].RunCommand();
+                // Create a lit to leverage Linq
+                List<string> args = _input.ToList();
+
+                // Remove index 0 (the command)
+                args.RemoveAt(0);
+
+                // Run the command & pass args
+                Commands[_input[0]].RunCommand(args.ToArray());
             }
         }
     }

@@ -21,7 +21,7 @@ namespace Console
             AddCommandToConsole();
         }
 
-        public override void RunCommand()
+        public override void RunCommand(string[] args)
         {
             if (Application.isEditor)
             {
