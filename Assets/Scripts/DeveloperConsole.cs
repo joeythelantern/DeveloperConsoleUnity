@@ -72,6 +72,7 @@ namespace Console
         {
             CommandQuit.CreateCommand();
             CommandCube.CreateCommand();
+            CommandClear.CreateCommand();
         }
 
         public static void AddCommandsToConsole(string _name, ConsoleCommand _command)
@@ -107,6 +108,11 @@ namespace Console
             consoleText.text += msg + "\n";
         }
 
+        public void ClearConsole()
+        {
+            consoleText.text = "";
+        }
+
         private void ParseInput(string input)
         {
             string[] _input = input.Split(' ');
@@ -123,11 +129,23 @@ namespace Console
             }
             else
             {
-                // Create a lit to leverage Linq
+                // Create a list to leverage Linq
                 List<string> args = _input.ToList();
 
                 // Remove index 0 (the command)
                 args.RemoveAt(0);
+
+                // Check if '-help' was passed
+                if (args.Contains("-help"))
+                {
+                    AddMessageToConsole("==============================");
+                    AddMessageToConsole(Commands[_input[0]].Description);
+                    AddMessageToConsole("------------------------------");
+                    AddMessageToConsole(Commands[_input[0]].Help);
+                    AddMessageToConsole("==============================");
+
+                    return;
+                }
 
                 // Run the command & pass args
                 Commands[_input[0]].RunCommand(args.ToArray());
